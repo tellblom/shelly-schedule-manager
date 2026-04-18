@@ -1,11 +1,11 @@
 # Shelly Schedule Manager
 
-[![GitHub Release][releases-shield]][releases]
-[![GitHub Activity][commits-shield]][commits]
-[![License][license-shield]](LICENSE)
+[![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2026.3%1B-blue.svg)](https://www.home-assistant.io/)
+[![Python](https://img.shields.io/badge/python-3.14%2B-blue.svg)](https://www.python.org/)
+[![AI Agent Ready](https://img.shields.io/badge/AI%20Agent-Ready-purple.svg)](#ai-agent-support)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-[![hacs][hacsbadge]][hacs]
-![Project Maintenance][maintenance-shield]
+
 
 Manage and control **Shelly device schedules** directly from Home Assistant with a clean and user-friendly interface.
 
