@@ -77,13 +77,10 @@ Then:
 1. Click **Download**
 2. Restart Home Assistant
 
----
+**Manual Installation**
 
-<details>
-<summary><strong>Manual Installation</strong></summary>
-
-Clone this repository.
-Copy the custom_componentsshelly_schedule_manager folder into your Home Assistant's custom_components folder.
-Install with add integration (search Shelly Schedule Manager)
+1. Clone this repository.
+2. Copy the custom_componentsshelly_schedule_manager folder into your Home Assistant's custom_components folder.
+3. Install with add integration (search Shelly Schedule Manager)
 
 
