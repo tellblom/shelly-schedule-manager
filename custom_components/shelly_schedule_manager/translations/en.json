@@ -1,0 +1,30 @@
+{
+  "config": {
+    "title": "Shelly Schedule Manager",
+    "step": {
+      "user": {
+        "title": "Set up Shelly Schedule Manager",
+        "description": "Create a Shelly Schedule Manager entry."
+      }
+    },
+    "abort": {
+      "already_configured": "Shelly Schedule Manager is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Options",
+        "description": "Configure Shelly Schedule Manager.",
+        "data": {
+          "debug_logging": "Enable debug logging",
+          "show_in_sidebar": "Show in sidebar"
+        },
+        "data_description": {
+          "debug_logging": "Write additional diagnostic details to the Home Assistant log.",
+          "show_in_sidebar": "Show the Shelly Schedule Manager page in the Home Assistant sidebar."
+        }
+      }
+    }
+  }
+}
