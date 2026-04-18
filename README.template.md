@@ -1,10 +1,11 @@
 # Shelly Schedule Manager
 
-[![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2026.3%1B-blue.svg)](https://www.home-assistant.io/)
-[![Python](https://img.shields.io/badge/python-3.14%2B-blue.svg)](https://www.python.org/)
-[![AI Agent Ready](https://img.shields.io/badge/AI%20Agent-Ready-purple.svg)](#ai-agent-support)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-
+[![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Integration-41BDF5?logo=home-assistant)](https://www.home-assistant.io/)
+[![HACS Custom](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://hacs.xyz)
+[![release](https://img.shields.io/github/v/release/tellblom/shelly-schedule-manager?display_name=tag)](https://github.com/tellblom/shelly-schedule-manager/releases/latest)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/arboeh/shABman/blob/main/LICENSE)
+[![maintained](https://img.shields.io/maintenance/yes/2026)](https://github.com/arboeh/shABman/graphs/commit-activity)
+[![Shelly](https://img.shields.io/badge/Shelly-Gen2%2FGen3-00A1DF?logo=shelly)](https://shelly.cloud)
 
 
 Manage and control **Shelly device schedules** directly from Home Assistant with a clean and user-friendly interface.
