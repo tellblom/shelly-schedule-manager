@@ -1,0 +1,128 @@
+sync_all:
+  name: Sync all devices
+  description: Sync schedules for all discovered Shelly devices.
+
+sync_device:
+  name: Sync device
+  description: Sync schedules for a specific Shelly device.
+  fields:
+    device_id:
+      name: Device ID
+      description: Home Assistant device registry ID for the Shelly device.
+      required: true
+      selector:
+        text:
+
+get_schedules:
+  name: Get schedules
+  description: Refresh schedules for a specific Shelly device.
+  fields:
+    device_id:
+      name: Device ID
+      description: Home Assistant device registry ID for the Shelly device.
+      required: true
+      selector:
+        text:
+    force:
+      name: Force refresh
+      description: Force a new sync from the Shelly device.
+      required: false
+      default: false
+      selector:
+        boolean:
+
+create_schedule:
+  name: Create schedule
+  description: Create a schedule on a Shelly device.
+  fields:
+    device_id:
+      name: Device ID
+      required: true
+      selector:
+        text:
+    timespec:
+      name: Timespec
+      description: Cron-like schedule string used by the integration.
+      required: true
+      selector:
+        text:
+    method:
+      name: Method
+      description: Shelly method to call, for example switch.set.
+      required: true
+      selector:
+        text:
+    params:
+      name: Parameters
+      description: Parameters sent to the Shelly method.
+      required: false
+      selector:
+        object:
+
+update_schedule:
+  name: Update schedule
+  description: Update an existing schedule on a Shelly device.
+  fields:
+    device_id:
+      name: Device ID
+      required: true
+      selector:
+        text:
+    job_id:
+      name: Job ID
+      description: Schedule job identifier.
+      required: true
+      selector:
+        text:
+    changes:
+      name: Changes
+      description: Fields to update, such as enable, timespec, or calls.
+      required: true
+      selector:
+        object:
+
+delete_schedule:
+  name: Delete schedule
+  description: Delete a schedule from a Shelly device.
+  fields:
+    device_id:
+      name: Device ID
+      required: true
+      selector:
+        text:
+    job_id:
+      name: Job ID
+      description: Schedule job identifier.
+      required: true
+      selector:
+        text:
+
+set_group:
+  name: Set group
+  description: Store a named group of Shelly devices.
+  fields:
+    group_name:
+      name: Group name
+      required: true
+      selector:
+        text:
+    device_ids:
+      name: Device IDs
+      required: false
+      selector:
+        object:
+
+set_gen1_schedule_enabled:
+  name: Set Gen1 schedule state
+  description: Enable or disable schedules for a Gen1 Shelly relay.
+  fields:
+    device_id:
+      name: Device ID
+      required: true
+      selector:
+        text:
+    enabled:
+      name: Enabled
+      required: true
+      selector:
+        boolean:
