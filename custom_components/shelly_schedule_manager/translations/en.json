@@ -1,6 +1,5 @@
 {
   "config": {
-    "title": "Shelly Schedule Manager",
     "step": {
       "user": {
         "title": "Set up Shelly Schedule Manager",
