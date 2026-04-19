@@ -1,0 +1,17 @@
+{
+  "title": "Shelly Schedule Manager",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up Shelly Schedule Manager"
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Options"
+      }
+    }
+  }
+}
