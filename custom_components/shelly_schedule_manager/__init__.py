@@ -6,6 +6,7 @@ from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, ServiceCall
+from homeassistant.helpers import config_validation as cv
 
 from .const import (
     CONF_DEBUG_LOGGING,
@@ -26,8 +27,11 @@ from .websocket_api import async_register_websocket_api
 
 _LOGGER = logging.getLogger(__name__)
 
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
+
 
 async def safe_call(fn, *args, **kwargs) -> dict[str, Any]:
+    """Wrap async calls so service handlers never explode."""
     try:
         result = await fn(*args, **kwargs)
         return {"ok": True, "result": result}
@@ -37,19 +41,23 @@ async def safe_call(fn, *args, **kwargs) -> dict[str, Any]:
 
 
 def utc_now_iso() -> str:
+    """Return current UTC time in ISO format."""
     return datetime.now(UTC).isoformat()
 
 
 def _is_debug(entry: ConfigEntry) -> bool:
+    """Return whether debug logging is enabled."""
     return entry.options.get(CONF_DEBUG_LOGGING, False)
 
 
 def _debug_log(entry: ConfigEntry, message: str, *args) -> None:
+    """Write debug log message when enabled in options."""
     if _is_debug(entry):
         _LOGGER.warning(message, *args)
 
 
 def extract_output_ids(config: dict) -> list[int]:
+    """Extract Gen2 output IDs from config payload."""
     output_ids: list[int] = []
 
     for key in config.keys():
@@ -63,6 +71,7 @@ def extract_output_ids(config: dict) -> list[int]:
 
 
 def build_gen1_raw_rule_from_timespec_and_params(timespec: str, params: dict) -> str:
+    """Convert UI schedule data into a Gen1 raw schedule rule."""
     parts = str(timespec).split()
     if len(parts) < 6:
         raise ValueError("Unsupported Gen1 timespec")
@@ -95,17 +104,21 @@ def build_gen1_raw_rule_from_timespec_and_params(timespec: str, params: dict) ->
 
     return f"{str(hour).zfill(2)}{str(minute).zfill(2)}-{weekday_digits}-{action}"
 
+
 async def _async_reload_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Reload config entry when options are updated."""
     await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:
+    """Set up the integration domain."""
     hass.data.setdefault(DOMAIN, {})
     await async_register_websocket_api(hass)
     return True
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Set up Shelly Schedule Manager from a config entry."""
     store = ShellyScheduleStorage(hass)
     await store.async_load()
 
@@ -158,7 +171,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     "generation": current.get("generation"),
                     "schedule_supported": current.get("schedule_supported"),
                     "output_ids": current.get("output_ids", []),
-                    "limited_schedule_support": current.get("limited_schedule_support", False),
+                    "limited_schedule_support": current.get(
+                        "limited_schedule_support", False
+                    ),
                     "gen1_schedule_state": current.get("gen1_schedule_state"),
                 },
             )
@@ -286,7 +301,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             output_ids = relays_result["result"]
             gen1_state = None
             if output_ids:
-                state_result = await safe_call(gen1_service.get_relay_schedule_state, output_ids[0])
+                state_result = await safe_call(
+                    gen1_service.get_relay_schedule_state, output_ids[0]
+                )
                 if state_result["ok"]:
                     gen1_state = state_result["result"]
 
@@ -474,10 +491,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 raise ValueError("Schedules are not supported for this device yet")
 
             schedule_service = ShellyScheduleService(ShellyClient(hass, ip))
-
             normalized_changes = dict(changes)
 
-            # Minimal payload for enable/disable
             if set(normalized_changes.keys()) == {"enable"}:
                 result = await safe_call(
                     schedule_service.update,
@@ -486,9 +501,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 )
                 if not result["ok"]:
                     raise ValueError(result["error"])
-
             else:
-                # Keep only fields Shelly Schedule.Update is expected to understand
                 allowed = {}
                 if "enable" in normalized_changes:
                     allowed["enable"] = bool(normalized_changes["enable"])
@@ -528,7 +541,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             raw_rule = build_gen1_raw_rule_from_timespec_and_params(timespec, params)
 
             gen1_service = ShellyGen1ScheduleService(ShellyGen1Client(hass, ip))
-            result = await safe_call(gen1_service.update_single_rule, relay_id, raw_rule, enable)
+            result = await safe_call(
+                gen1_service.update_single_rule,
+                relay_id,
+                raw_rule,
+                enable,
+            )
             if not result["ok"]:
                 raise ValueError(result["error"])
 
@@ -611,7 +629,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         relay_id = int(output_ids[0]) if output_ids else 0
 
         gen1_service = ShellyGen1ScheduleService(ShellyGen1Client(hass, ip))
-        result = await safe_call(gen1_service.set_schedule_enabled, relay_id, bool(enabled))
+        result = await safe_call(
+            gen1_service.set_schedule_enabled,
+            relay_id,
+            bool(enabled),
+        )
         if not result["ok"]:
             raise ValueError(result["error"])
 
@@ -625,12 +647,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.services.async_register(DOMAIN, "update_schedule", update_schedule)
     hass.services.async_register(DOMAIN, "delete_schedule", delete_schedule)
     hass.services.async_register(DOMAIN, "set_group", set_group)
-    hass.services.async_register(DOMAIN, "set_gen1_schedule_enabled", set_gen1_schedule_enabled)
+    hass.services.async_register(
+        DOMAIN, "set_gen1_schedule_enabled", set_gen1_schedule_enabled
+    )
 
     _LOGGER.info("Shelly Schedule Manager loaded with storage backend")
     return True
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Unload config entry."""
     hass.data[DOMAIN].pop(entry.entry_id, None)
     return True
