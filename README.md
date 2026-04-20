@@ -84,3 +84,5 @@ Then:
 3. Install with add integration (search Shelly Schedule Manager)
 
 
+Icon made by Sithi Ray
+
